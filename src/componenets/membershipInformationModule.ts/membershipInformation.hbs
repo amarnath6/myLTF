@@ -1,0 +1,101 @@
+{{#> _page breadcrumbs=true category="Membership" currentPage="Your Membership Information" }}
+    {{#> _card icon="ico-membership" }}
+        {{{{ raw-helper }}}}
+            <div class="col-md-offset-2 col-md-8 col-lg-offset-0 col-lg-4 m-b-1">
+                <p class="card-text">
+                     Here's a summary of your membership status and current account balance information.
+                </p>
+
+                <p class="card-text">
+					Need help? Connect with us by calling <span ng-bind="::constMembershipContactPhoneNumber"></span>,
+					sending us a message, or stopping by the Member Services desk at your local club.
+                </p>
+            </div>
+
+            <div class="col-xs-12 col-md-12 col-lg-8" ng-if="false">
+				<br>
+				<span class="loading-spinner"></span>
+			</div>
+
+            <div class="col-xs-12 col-md-offset-2 col-md-8 col-lg-offset-1 col-lg-5 ng-cloak">
+                 <table class="table-totals">
+                     <tr>
+                        <th>
+                            <strong>Membership Type:</strong>
+                        </th>
+                        <td class="text-xs-left">
+                            &nbsp;{{ctrl.user.memberContext.membershipType.displayName}}
+                        </td>
+                     </tr>
+                     <tr>
+                        <th>
+                            <strong>Status:</strong>
+                        </th>
+                        <td class="text-xs-left">
+                            &nbsp;{{ctrl.user.memberContext.membershipStatus}}
+                        </td>
+                     </tr>
+                     <tr>
+                        <th>
+                            <strong>Activation Date:</strong>
+                        </th>
+                        <td>
+                           &nbsp;{{ctrl.membershipDetails.activeDate}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <strong>Termination Date:</strong>
+                        </th>
+                        <td>
+                            &nbsp;{{ctrl.membershipDetails.expirationDate || '&mdash; &mdash;'}}
+                        </td>
+                    </tr>
+                </table>
+             <div class="col-xs-8 p-x-0">
+                   <hr />
+             </div>
+
+             <div class="m-t-1">
+                <table class="table-totals">
+                   <tbody>
+                   <tr>
+                        <th>
+                            <strong>Membership Dues:</strong>
+                        </th>
+                        <td class="text-xs-right">
+                           &nbsp;{{(ctrl.membershipDetails.membershipDues.mainDues || 0.00) | currency}}
+                        </td>
+                   </tr>
+
+                   <tr>
+                        <th class="p-b-1">
+                            <strong>Junior Dues:</strong>
+                        </th>
+                        <td class="text-xs-right p-b-1">
+                           &nbsp;{{(ctrl.membershipDetails.membershipDues.jrDues || 0.00) | currency}}
+                        </td>
+                   </tr>
+                   <tr>
+                        <th class="b-t p-t-1">
+                            <strong>Membership Balance:</strong>
+                        </th>
+                        <td class="b-t p-t-1">
+                        &nbsp;{{(ctrl.membershipDetails.membershipBalance.currentBalance || 0.00) | currency}}
+                        </td>
+                   </tr>
+                   </tbody>
+               </table>
+           </div>
+
+            <p class="card-text">
+            See <a href="#" lt-page-driver="transactionHistory">Transaction History</a> for more detailed information.
+            </p>
+        </div>
+
+
+        {{{{/raw-helper}}}}
+
+     </div>
+   {{/_card}}
+{{/_page}}

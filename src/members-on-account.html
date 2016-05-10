@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="clubId" content="151"/>
+	<meta name="clubName" content="Coon Rapids"/>
+
+	<title></title>
+	<script src="../../../jspm_packages/github/es-shims/es5-shim@4.3.0/es5-shim.js"></script>
+	<script src="../../../jspm_packages/github/es-shims/es6-shim@0.35.0/es6-shim.js"></script>
+	<script src="../../../jspm_packages/system.js"></script>
+	<script src="../../../config.js"></script>
+	<script>
+		System.baseURL = '../../../';
+		var sharedComponents = System.normalizeSync('lt-shared-components');
+		var sharedComponentsDir = sharedComponents.replace('.js', '');
+		var sharedCSS = sharedComponentsDir + '/dist/css/shared-styles.css';
+		var styleLink = document.createElement('link');
+		styleLink.rel = 'stylesheet';
+		styleLink.href = sharedCSS;
+		document.head.appendChild(styleLink);
+	</script>
+	<link rel="stylesheet" href="/dist/clientlibs/css/account-components.min.css"/>
+	<script>
+		var lt = {
+			api: {
+				account: '/api/myaccount',
+				commprefs: '/api/commprefs'
+			},
+			globalPageDrivers: {
+				account: {},
+				global: {}
+			}
+		};
+		System.import('src/mocks/destinations').then(function(destinations){
+			var pageDrivers = destinations.default;
+			var keys = Object.keys(pageDrivers);
+			for(var i = 0; i < keys.length; i++){
+				var key = keys[i];
+				var url = pageDrivers[key];
+				
+				if (key.indexOf('account.') === 0) {
+					lt.globalPageDrivers.account[key.replace('account.','')] = url;
+				} else if (key.indexOf('global.') === 0) {
+					lt.globalPageDrivers.global[key.replace('global.','')] = url;
+				}
+			}
+
+			console.log('Page drivers set:');
+			console.log(lt);
+		});
+	</script>
+</head>
+<body>
+
+<main class="main-mylt">
+	<div class="lt-account">
+		<div class="container-fluid lt-account hide-print">
+			<div class="container">
+				<div class="row">
+					<header class="col-xs-12 account-title">
+						<h1>ACCOUNT</h1>
+					</header>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid background-gray">
+			<div class="container" id="lt-account-members-on-account" ng-controller="MainController as ctrl">
+				<div class="row">
+						<nav class="col-xs-12 breadcrumbs hide-print">
+							<a href=""
+							   lt-page-driver="accountDetails">
+								Account
+							</a>
+								>
+								<a href="#membership"
+								   lt-page-driver="accountDetails">
+								    Membership
+								</a>
+							> Account Members
+						</nav>
+					<div class="col-xs-12 "
+						>
+						<a name="account_members"></a>
+						<div class="card card-index card-account">
+							<span class="ico-membership hide-print"></span>
+							<div class="card-header hide-print">
+								<h2 class="h5 card-title">Account Members</h2>
+							</div>
+							<div class="card-block">
+								<div class="row">
+											<div class="col-md-offset-2 col-md-8 col-lg-offset-0 col-lg-4 m-b-1">
+													<p class="card-text">
+														Here are the primary, partner, secondary and junior members associated with your account.
+													</p>
+									
+													<p class="card-text">
+														You can give a partner member permission to view and update membership information.
+														Just review and click the authorization checkboxes beneath their profile data.
+													</p>
+												<div>
+													<table class="table-simple ng-cloak">
+														<tr>
+															<td>
+																<strong>Membership Level</strong>
+															</td>
+															<td>
+																{{ctrl.user.memberContext.membershipType.displayName}}
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+									
+											<div class="col-xs-12 col-md-12 col-lg-8" ng-if="!ctrl.memberDetails.$resolved">
+												<span class="loading-spinner"></span>
+											</div>
+									
+											<div class="col-xs-12 col-md-offset-2 col-md-8 col-lg-offset-1 col-lg-5 ng-cloak" ng-if="ctrl.memberDetails.$resolved">
+												<div class="form-group ng-cloak"
+												     ng-show="ctrl.generalMessage || ctrl.generalError"
+													>
+												
+													<div class="alert alert-success alert-icon"
+														     ng-show="ctrl.generalMessage">
+														<p ng-bind-html="ctrl.generalMessage"></p>
+													</div>
+												
+													<div class="alert alert-danger alert-icon"
+														 ng-show="ctrl.generalError">
+															<p ng-bind-html="ctrl.generalError"></p>
+													</div>
+												</div>
+									
+												<div ng-repeat="i in ctrl.memberDetails">
+													<h2 class="form-title h5 p-t-0 m-b-1" ng-if="i.memberDetail.name.middle">
+														{{i.memberDetail.memberType | fcap}} Member - {{i.memberDetail.name.prefix}}&nbsp;{{i.memberDetail.name.first}}&nbsp;{{i.memberDetail.name.middle}}&nbsp;{{i.memberDetail.name.last}}&nbsp;{{i.memberDetail.name.suffix}}
+													</h2>
+													<h2 class="form-title h5 p-t-0 m-b-1" ng-if="!i.memberDetail.name.middle">
+														{{i.memberDetail.memberType | fcap}} Member - {{i.memberDetail.name.prefix}}&nbsp;{{i.memberDetail.name.first}}&nbsp;{{i.memberDetail.name.middle}}{{i.memberDetail.name.last}}&nbsp;{{i.memberDetail.name.suffix}}
+													</h2>
+													<table class="table-simple m-b-1">
+														<tbody>
+															<tr>
+																<td class="p-r-3">
+																	<strong>Member Number</strong>
+																</td>
+																<td class="p-l-3">
+																	{{i.memberDetail.memberId}}
+																</td>
+															</tr>
+															<tr>
+																<td class="p-r-3">
+																	<strong>Member Type</strong>
+																</td>
+																<td class="p-l-3">
+																	{{i.memberDetail.memberType | fcap}}
+																</td>
+															</tr>
+															<tr>
+																<td class="p-r-3">
+																	<strong>Age</strong>
+																</td>
+																<td class="p-l-3">
+																	{{i.memberDetail.age}}
+																</td>
+															</tr>
+															<tr>
+																<td class="p-r-3">
+																	<strong>Gender</strong>
+																</td>
+																<td class="p-l-3">
+																	{{i.memberDetail.gender | gender}}
+																</td>
+															</tr>
+															<tr>
+																<td class="p-r-3">
+																	<strong>Join Date</strong>
+																</td>
+																<td class="p-l-3">
+																	{{i.memberDetail.joinDate}}
+																</td>
+															</tr>
+														</tbody>
+													</table>
+									
+													<div ng-if="i.memberDetail.memberType == 'PARTNER' && ctrl.user.memberContext.memberType == 'PRIMARY'">
+														<input type="checkbox" id="iautho" ng-model="ctrl.partnerAuthorized">
+														<label for="iautho" class="card-text">
+															I authorize this member to view and update membership information.
+														</label>
+									
+														<input type="checkbox" id="ihave" ng-model="ctrl.partnerAuthorizedAndAgreed">
+														<label for="ihave" ng-show="ctrl.partnerAuthorized && !ctrl.partnerPrevAuthorized" class="card-text">
+															I have read, understand and voluntarily agree to all the terms and conditions of the
+															<a href="#"
+															   lt-page-driver="generalAgreements"
+															   lt-page-driver-parameters="{agreementId:9}"
+															   target="_blank">Partner Access Authorization agreement.</a>
+														</label>
+									
+														<button type="submit" ng-disabled="!ctrl.partnerAuthorizedAndAgreed" ng-show="ctrl.partnerAuthorized != ctrl.partnerPrevAuthorized"
+																ng-click="ctrl.changePartnerAuthorization(ctrl.partnerAuthorized)" class="btn btn-primary m-y-1">
+															Update
+														</button>
+									
+														<div class="form-group ng-cloak"
+														     ng-show="ctrl.updatePartnerAuthSuccess || ctrl.updatePartnerAuthError"
+															>
+														
+															<div class="alert alert-success alert-icon"
+																     ng-show="ctrl.updatePartnerAuthSuccess">
+																<p ng-bind-html="ctrl.updatePartnerAuthSuccess"></p>
+															</div>
+														
+															<div class="alert alert-danger alert-icon"
+																 ng-show="ctrl.updatePartnerAuthError">
+																	<p ng-bind-html="ctrl.updatePartnerAuthError"></p>
+															</div>
+														</div>
+													</div>
+									
+													<hr ng-if="!$last">
+												</div>
+											</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+	
+				<script type="text/ng-template" id="error-messages">
+					<div ng-message="required" class="label-help-error">* required</div>
+					<div ng-message="minlength" class="label-help-error">This field is too short</div>
+					<div ng-message="maxlength" class="label-help-error">This field is too long</div>
+					<div ng-message="pattern" class="label-help-error">Sorry, this field contains unsupported characters</div>
+					<div ng-message="notHome" class="label-help-error">You can only have one 'Home' number</div>
+					<div ng-message="invalidPhoneNumber" class="label-help-error">Sorry, that seems to be an invalid phone number</div>
+					<div ng-message="unique" class="label-help-error">Sorry, another label with the same name already exists</div>
+					<div ng-message="dateOfBirth" class="label-help-error">Not a valid (MM/DD/YYYY) birth date</div>
+					<div ng-message="email" class="label-help-error">Sorry, that seems to be an invalid email format.</div>
+					<div ng-message="password" class="label-help-error">Passwords must be between 8 and 30 characters, contain at least one letter (A-Z) and one number (0-9) and contain no spaces.</div>
+					<div ng-message="passwordCharacters" class="label-help-error">Sorry, this field contains unsupported characters</div>
+					<div ng-message="passwordUsername" class="label-help-error">Sorry, that seems to be an invalid password format. Passwords can't contain your username</div>
+					<div ng-message="parse" class="label-help-error">This field is not in a valid format</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</main>
+
+<script>
+	var dependencies = [
+	];
+
+	var jq = 'jquery';
+	var mock = 'lt-aem-mock-framework';
+	var normalized = System.normalizeSync(jq);
+	var scriptEl = document.createElement('script');
+	scriptEl.src = normalized.replace('.js', '') + '/jquery.min.js';
+	document.head.appendChild(scriptEl);
+
+	dependencies.forEach(function(dep) {
+		var normalized = System.normalizeSync(dep);
+		var scriptEl = document.createElement('script');
+		scriptEl.src = normalized;
+		document.head.appendChild(scriptEl);
+	});
+
+    Promise.all([System.import('lodash'), System.import('angular'), System.import('moment'), System.import('tether'), System.import('lt-aem-mock-framework')])
+        .then(function(deps) {
+            window._ = deps[0];
+            window.angular = deps[1];
+            window.moment = deps[2];
+            window.Tether = deps[3]; // needed by Bootstrap 4 alpha-2 JS
+			window.LtFramework = deps[4].LtFramework;
+			System.import('bootstrap'); // import Bootstrap 4, now that window.Tether is set
+			System.import('src/components/members-on-account/bootstrap');
+			System.import('src/mocks/float-labels');
+			System.import('src/mocks/fake-sso');
+			System.import('src/mocks/fake-navigation');
+		});
+</script>
+</body>
+</html>

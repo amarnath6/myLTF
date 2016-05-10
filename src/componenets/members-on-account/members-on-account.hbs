@@ -1,0 +1,122 @@
+{{#> _page breadcrumbs=true category="Membership" currentPage="Your Account Members" }}
+	{{#> _card icon="ico-membership" }}
+		<div class="col-md-offset-2 col-md-8 col-lg-offset-0 col-lg-4 m-b-1">
+				<p class="card-text">
+					Here are the primary, partner, secondary and junior members associated with your account.
+				</p>
+
+				<p class="card-text">
+					You can give a partner member permission to view and update membership information.
+					Just review and click the authorization checkboxes beneath their profile data.
+				</p>
+			<div>
+				<table class="table-simple ng-cloak">
+					<tr>
+						<td>
+							<strong>Membership Level</strong>
+						</td>
+						<td>
+							\{{ctrl.user.memberContext.membershipType.displayName}}
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="col-xs-12 col-md-12 col-lg-8" ng-if="!ctrl.memberDetails.$resolved">
+			<span class="loading-spinner"></span>
+		</div>
+
+		<div class="col-xs-12 col-md-offset-2 col-md-8 col-lg-offset-1 col-lg-5 ng-cloak" ng-if="ctrl.memberDetails.$resolved">
+			{{> _formInlineConfirmationMessages
+			successBinding="ctrl.generalMessage"
+			successExpression="ctrl.generalMessage"
+			errorExpression="ctrl.generalError"
+			errorBinding="ctrl.generalError" }}
+
+			<div ng-repeat="i in ctrl.memberDetails">
+				<h2 class="form-title h5 p-t-0 m-b-1" ng-if="i.memberDetail.name.middle">
+					\{{i.memberDetail.memberType | fcap}} Member - \{{i.memberDetail.name.prefix}}&nbsp;\{{i.memberDetail.name.first}}&nbsp;\{{i.memberDetail.name.middle}}&nbsp;\{{i.memberDetail.name.last}}&nbsp;\{{i.memberDetail.name.suffix}}
+				</h2>
+				<h2 class="form-title h5 p-t-0 m-b-1" ng-if="!i.memberDetail.name.middle">
+					\{{i.memberDetail.memberType | fcap}} Member - \{{i.memberDetail.name.prefix}}&nbsp;\{{i.memberDetail.name.first}}&nbsp;\{{i.memberDetail.name.middle}}\{{i.memberDetail.name.last}}&nbsp;\{{i.memberDetail.name.suffix}}
+				</h2>
+				<table class="table-simple m-b-1">
+					<tbody>
+						<tr>
+							<td class="p-r-3">
+								<strong>Member Number</strong>
+							</td>
+							<td class="p-l-3">
+								\{{i.memberDetail.memberId}}
+							</td>
+						</tr>
+						<tr>
+							<td class="p-r-3">
+								<strong>Member Type</strong>
+							</td>
+							<td class="p-l-3">
+								\{{i.memberDetail.memberType | fcap}}
+							</td>
+						</tr>
+						<tr>
+							<td class="p-r-3">
+								<strong>Age</strong>
+							</td>
+							<td class="p-l-3">
+								\{{i.memberDetail.age}}
+							</td>
+						</tr>
+						<tr>
+							<td class="p-r-3">
+								<strong>Gender</strong>
+							</td>
+							<td class="p-l-3">
+								\{{i.memberDetail.gender | gender}}
+							</td>
+						</tr>
+						<tr>
+							<td class="p-r-3">
+								<strong>Join Date</strong>
+							</td>
+							<td class="p-l-3">
+								\{{i.memberDetail.joinDate}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div ng-if="i.memberDetail.memberType == 'PARTNER' && ctrl.user.memberContext.memberType == 'PRIMARY'">
+					<input type="checkbox" id="iautho" ng-model="ctrl.partnerAuthorized">
+					<label for="iautho" class="card-text">
+						I authorize this member to view and update membership information.
+					</label>
+
+					<input type="checkbox" id="ihave" ng-model="ctrl.partnerAuthorizedAndAgreed">
+					<label for="ihave" ng-show="ctrl.partnerAuthorized && !ctrl.partnerPrevAuthorized" class="card-text">
+						I have read, understand and voluntarily agree to all the terms and conditions of the
+						<a href="#"
+						   lt-page-driver="generalAgreements"
+						   lt-page-driver-parameters="{agreementId:9}"
+						   target="_blank">Partner Access Authorization agreement.</a>
+					</label>
+
+					<button type="submit" ng-disabled="!ctrl.partnerAuthorizedAndAgreed" ng-show="ctrl.partnerAuthorized != ctrl.partnerPrevAuthorized"
+							ng-click="ctrl.changePartnerAuthorization(ctrl.partnerAuthorized)" class="btn btn-primary m-y-1">
+						Update
+					</button>
+
+					{{> _formInlineConfirmationMessages
+					successBinding="ctrl.updatePartnerAuthSuccess"
+					successExpression="ctrl.updatePartnerAuthSuccess"
+					errorExpression="ctrl.updatePartnerAuthError"
+					errorBinding="ctrl.updatePartnerAuthError" }}
+				</div>
+
+				<hr ng-if="!$last">
+			</div>
+		</div>
+
+	{{/_card}}
+
+{{/_page}}

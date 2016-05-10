@@ -1,0 +1,25 @@
+/*
+1. element based selector
+2. class based selector
+3. id based selector
+*/
+
+/*element based selector*/
+body {
+    background-color: lightgreen;
+}
+
+label {
+    font-size: 20px;
+}
+
+table {
+    border: 2px dotted black;
+}
+
+/* class based selector*/
+
+.tableContent {
+  padding: 20px;  
+  margin: 20px;
+}
